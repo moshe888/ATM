@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using TransactionMicroservice.DataAccess;
 using TransactionMicroservice.Services;
 using AccountMicroservice.Services;
 using AccountMicroservice;
@@ -25,14 +24,20 @@ namespace TransactionMicroservice
             // Add other dependencies if needed
 
             services.AddControllers();
+            services.AddSwaggerGen();
+
 
             // Configure database connection
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<TransactionDbContext>(options =>
-                options.UseSqlServer(connectionString));
 
-            // Register services
+      
+
+            services.AddDbContext<AccountDbContext>(options =>
+                           options.UseSqlServer(connectionString));
+
             services.AddScoped<TransactionService>();
+            services.AddScoped<AccountService>();
+
 
          
         }
@@ -42,12 +47,16 @@ namespace TransactionMicroservice
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
                 app.UseExceptionHandler("/error");
                 app.UseHsts();
             }
+            app.UseHttpsRedirection();
+
 
             app.UseRouting();
 

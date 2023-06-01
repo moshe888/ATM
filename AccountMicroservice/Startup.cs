@@ -22,13 +22,16 @@ namespace AccountMicroservice
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen();
+
 
             // Register ApplicationDbContext
-            services.AddDbContext<AccountDbContext>(options =>
-                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<AccountDbContext>(options => options.UseSqlServer(connectionString));
 
             // Register AccountService
-            services.AddScoped<AccountService>();
+           services.AddScoped<AccountService>();
+ 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -36,12 +39,16 @@ namespace AccountMicroservice
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
                 app.UseExceptionHandler("/error");
                 app.UseHsts();
             }
+            app.UseHttpsRedirection();
+
 
             app.UseRouting();
 

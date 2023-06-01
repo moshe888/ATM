@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AccountMicroservice.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("atm/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -16,17 +16,26 @@ namespace AccountMicroservice.Controllers
         }
 
         [HttpGet("{accountNumber}/balance")]
+
         public ActionResult<decimal> GetAccountBalance(int accountNumber)
         {
             var balance = _accountService.GetAccountBalance(accountNumber);
             return Ok(balance);
-        }
 
-        [HttpPost("{accountNumber}/balance")]
+        }
+        [HttpPost]
+        public IActionResult CreateAccount()
+        {
+           Account account =  _accountService.CreateAccount();
+            return CreatedAtAction(nameof(GetAccountBalance), new { accountNumber = account.AccountNumber }, account);
+        }   
+
+        [HttpPut("{accountNumber}/balance")]
         public IActionResult UpdateAccountBalance(int accountNumber, decimal amount)
         {
             _accountService.UpdateAccountBalance(accountNumber, amount);
-            return NoContent();
+            return Ok();
         }
+
     }
 }

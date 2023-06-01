@@ -7,7 +7,7 @@ namespace AccountMicroservice
 {
     public class AccountDbContext : DbContext
     {
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Account> Accounts { get; set; } 
 
         public AccountDbContext(DbContextOptions<AccountDbContext> options) : base(options)
         {
@@ -15,6 +15,7 @@ namespace AccountMicroservice
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Account>().ToTable("Account");
             // Configure entity mappings and relationships
             modelBuilder.Entity<Account>()
                 .HasKey(a => a.AccountNumber);

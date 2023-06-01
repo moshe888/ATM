@@ -2,7 +2,6 @@
 using AccountMicroservice.Models;
 using System.Linq;
 
-
 namespace AccountMicroservice.Services
 {
     public class AccountService
@@ -28,6 +27,15 @@ namespace AccountMicroservice.Services
                 account.Balance += amount;
                 _dbContext.SaveChanges();
             }
+        }
+
+        public Account CreateAccount()
+        {
+            var account = new Account();
+            account.Balance = 0;
+            _dbContext.Accounts.Add(account);
+            _dbContext.SaveChanges();
+            return account;
         }
     }
 }
